@@ -418,7 +418,7 @@ def main():
     os.makedirs(PUBLIC_DIR, exist_ok=True)
     server = ThreadingHTTPServer(("0.0.0.0", PORT), Handler)
     print("=" * 50)
-    print("  Chi Tiêu Thông Minh — Backend + API")
+    print("  Chi Tiêu Thông Minh – Backend + API")
     print("  Database:", DB_PATH)
     print("  URL:      http://localhost:%d" % PORT)
     print("  API:      http://localhost:%d/api/health" % PORT)
