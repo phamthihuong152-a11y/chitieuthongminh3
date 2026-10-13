@@ -1,70 +1,34 @@
-# Chi Tiêu Thông Minh
+# Chi Tiêu Thông Minh — Ứng dụng Quản lý Tài chính (Flask + SQLite)
 
-Website quản lý thu chi cá nhân — **backend + SQLite thật**, không dùng localStorage.
+Ứng dụng quản lý thu chi cá nhân xây dựng bằng Python (Flask Framework) và cơ sở dữ liệu SQLite, chạy trên máy chủ cục bộ hoặc môi trường cloud.
 
-## Yêu cầu
+## Tính năng chính
+- Quản lý giao dịch thu/chi (Thêm, Sửa, Xóa) với kiểm tra dữ liệu hợp lệ (validation).
+- Hệ thống 11 danh mục mặc định phân loại rõ ràng theo Thu nhập và Chi tiêu.
+- Dashboard tổng quan: Hiển thị tổng thu, tổng chi, số dư ròng và phân bổ chi tiêu theo danh mục trong tháng.
+- Quản lý ngân sách: Thiết lập hạn mức chi theo tháng/danh mục, tự động tính tỷ lệ % thực chi, cảnh báo khi đạt từ 80% và thông báo khi vượt hạn mức.
+- Bộ lọc giao dịch linh hoạt theo tháng, loại, danh mục và từ khóa ghi chú.
+- Xuất dữ liệu ra file CSV chuẩn mã hóa tiếng Việt (UTF-8 BOM) tương thích tuyệt đối với Microsoft Excel.
+- Dữ liệu lưu trữ bền vững trên tệp cơ sở dữ liệu SQLite (`chi_tieu.db`).
 
-- Python 3.8+ (chỉ dùng thư viện chuẩn: `sqlite3`, `http.server`)
-- Không cần `npm install` hay pip package
+## Cài đặt và Chạy trên Windows / Linux / macOS
 
-## Cấu trúc
-
-```
-chi-tieu-thong-minh/
-├── server.py           # Backend HTTP + REST API
-├── data/
-│   └── chi_tieu.db     # SQLite database (đã seed dữ liệu mẫu)
-├── public/
-│   └── index.html      # Frontend — gọi API qua fetch()
-├── schema.sql          # Lược đồ bảng (khớp với DB và API)
-└── README.md
-```
-
-## Cách chạy
+1. Cài đặt Python 3.10+ từ [python.org](https://www.python.org/) (đảm bảo tích chọn *Add Python to PATH*).
+2. Tải hoặc giải nén mã nguồn vào thư mục dự án.
+3. Mở Terminal / Command Prompt tại thư mục dự án và chạy các lệnh sau:
 
 ```bash
-cd chi-tieu-thong-minh
-python3 server.py
-```
+# Tạo môi trường ảo (tùy chọn nhưng khuyến nghị)
+python -m venv .venv
+# Kích hoạt môi trường ảo:
+# Trên Windows:
+.venv\Scripts\activate
+# Trên macOS/Linux:
+source .venv/bin/activate
 
-Mở trình duyệt: **http://localhost:3000**
+# Nâng cấp pip và cài đặt thư viện phụ thuộc
+python -m pip install --upgrade pip
+pip install -r requirements.txt
 
-Kiểm tra API: **http://localhost:3000/api/health**
-
-## API endpoints
-
-| Method | Path | Mô tả |
-|--------|------|--------|
-| GET | `/api/health` | Trạng thái server + DB |
-| GET | `/api/categories` | Danh sách danh mục |
-| POST | `/api/categories` | Thêm danh mục `{name, type}` |
-| DELETE | `/api/categories/:id` | Xóa danh mục |
-| GET | `/api/transactions` | Lọc: `type`, `category_id`, `month`, `year`, `keyword`, `from`, `to` |
-| POST | `/api/transactions` | Thêm `{type, amount, date, category_id, note}` |
-| PUT | `/api/transactions/:id` | Sửa giao dịch |
-| DELETE | `/api/transactions/:id` | Xóa giao dịch |
-| GET | `/api/budgets` | Lọc: `month`, `year` |
-| POST | `/api/budgets` | Thêm `{month, year, category_id, limit_amount}` |
-| PUT | `/api/budgets/:id` | Sửa ngân sách |
-| DELETE | `/api/budgets/:id` | Xóa ngân sách |
-| GET | `/api/summary` | Tổng thu/chi/số dư theo `month`, `year` |
-
-## Tên trường (thống nhất)
-
-| Bảng | Trường |
-|------|--------|
-| transactions | `id`, `type`, `amount`, `date`, `category_id`, `note`, `created_at` |
-| categories | `id`, `name`, `type` |
-| budgets | `id`, `month`, `year`, `category_id`, `limit_amount` |
-
-## Dữ liệu mẫu
-
-- Thu: 17.000.000 ₫ (lương + thưởng)
-- Chi: 5.650.000 ₫
-- 10 danh mục, 10 giao dịch, 3 ngân sách (tháng 10/2026)
-
-## Lưu ý
-
-- Frontend **không** dùng `localStorage` cho dữ liệu nghiệp vụ.
-- Mọi CRUD đi qua API → ghi vào file `data/chi_tieu.db`.
-- Reload trang vẫn còn dữ liệu vì đã lưu trong SQLite.
+# Khởi chạy ứng dụng
+python app.py
